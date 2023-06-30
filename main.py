@@ -23,7 +23,6 @@ def loadingPage(caption):
         # Membaca dan menunggu respon
         for chunk in response.iter_content(1024):
             # Menggunakan fungsi sleep untuk simulasi waiting response
-            # Anda dapat menggantinya dengan operasi yang sesuai
             time.sleep(0.05)
             pbar.set_postfix_str('waiting response...')
             pbar.update(len(chunk))
@@ -92,7 +91,6 @@ else:
 print(Fore.BLUE + '** Selamat Datang akuntansiBPKAD **\n'  + Style.RESET_ALL)
 
 
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~ print Proporsi Anggaran Terhadap Realisasi ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 print(Fore.BLUE + '~ mulai coba ambil data Anggaran' + Style.RESET_ALL)
 # Mengirim GET request ke halaman setelah login
@@ -149,3 +147,12 @@ except Exception as e:
 finally:
     print(Fore.LIGHTMAGENTA_EX + 'Bye...' + Style.RESET_ALL)
     logout()
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~ print Proporsi Anggaran Terhadap Realisasi ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+print(Fore.BLUE + '~ mulai coba ambil data Anggaran' + Style.RESET_ALL)
+# Mengirim GET request ke halaman setelah login
+response = session.get(urlserver + '/dashboard/get-data-anggaran', stream=True)
+loadingPage('Fetching Data Anggaran ')
+
+# Parsing data JSON
+data_json = json.loads(response.text)
