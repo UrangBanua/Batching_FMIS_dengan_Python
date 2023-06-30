@@ -30,7 +30,7 @@ def loadingPage(caption):
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ fungsi logout ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def logout():    
-    response = session.post('https://hulusungaitengahkab.fmis.id/2023/logout')
+    response = session.post(urlserver + '/logout')
     loadingPage('Logout... ')
 
 # Buat session
@@ -41,17 +41,15 @@ session.cookies.clear()
 print(Fore.BLUE + '~ memuat sesi awal' + Style.RESET_ALL)
 
 # promt input username & password
-kduser = input('Username (default akuntansiBPKAD): ') or 'akuntansiBPKAD'
-password = getpass.getpass('Password : ')
+urlserver = input('UrlServer :(default FMIS Kab. HST) ') or 'https://hulusungaitengahkab.fmis.id/2023'
+kduser = input('Username  :(default akuntansiBPKAD) ') or 'akuntansiBPKAD'
+password = getpass.getpass('Password  : ')
 while not password:
     print(Fore.RED + '! Password tidak boleh kosong' + Style.RESET_ALL)
-    password = getpass.getpass('Password : ')
-
-# URL halaman sebelum login untuk mendapatkan token
-pre_login_url = 'https://hulusungaitengahkab.fmis.id/2023'
+    password = getpass.getpass('Password  : ')
 
 # Mengirim GET request ke halaman sebelum login
-response = session.get(pre_login_url)
+response = session.get(urlserver)
 
 # Parsing halaman dengan BeautifulSoup
 soup = BeautifulSoup(response.content, 'html.parser')
@@ -61,13 +59,13 @@ token = soup.find('input', {'name': '_token'})['value']
 print(Fore.GREEN + '~ token didapatkan:', token + ' \n' + Style.RESET_ALL)
 
 # URL halaman login
-login_url = 'https://hulusungaitengahkab.fmis.id/2023/login'
+login_url = urlserver + '/login'
 
 # Data login (sesuaikan dengan field input pada halaman login)
 payload = {
     '_token': token,
-    'kduser': 'akuntansiBPKAD',
-    'password': 'hulusungaitengahkab.ak',
+    'kduser': kduser,
+    'password': password,
     'tahun': '2023'
 }
 
@@ -95,11 +93,10 @@ print(Fore.BLUE + '** Selamat Datang akuntansiBPKAD **\n'  + Style.RESET_ALL)
 
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ printout ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+# ~~~~~~~~~~~~~~~~~~~~~~~~~ print Proporsi Anggaran Terhadap Realisasi ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+print(Fore.BLUE + '~ mulai coba ambil data Anggaran' + Style.RESET_ALL)
 # Mengirim GET request ke halaman setelah login
-print(Fore.BLUE + '>> Mulai Tampilkan Data Proporsi Anggaran Terhadap Realisasi <<' + Style.RESET_ALL)
-response = session.get('https://hulusungaitengahkab.fmis.id/2023/dashboard/get-data-anggaran', stream=True)
+response = session.get(urlserver + '/dashboard/get-data-anggaran', stream=True)
 loadingPage('Fetching Data Anggaran ')
 
 # Parsing data JSON
@@ -129,9 +126,11 @@ try:
 
     subset_df = df_sorted[['nmskpd', 'total_anggaran', 'persen_realisasi', 'persen_sisa']]
 
+    print(Fore.LIGHTGREEN_EX + '')
+    print('>> Proporsi Anggaran Terhadap Realisasi >>')
     # Menampilkan DataFrame ke output CLI
     print(subset_df)
-    print('')
+    print('' + Style.RESET_ALL)
 
 except NameError:
   # menampilkan pesan jika terjadi pengecualian
@@ -148,5 +147,5 @@ except Exception as e:
     print(Fore.RED + '! Terjadi kesalahan lain >> logout/n' + Style.RESET_ALL, str(e))
 
 finally:
-    print('Bye...')
+    print(Fore.LIGHTMAGENTA_EX + 'Bye...' + Style.RESET_ALL)
     logout()
