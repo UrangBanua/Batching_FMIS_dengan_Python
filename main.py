@@ -11,6 +11,54 @@ from colorama import Fore, Style
 
 # Set lokalisasi atau regional ke Indonesia
 locale.setlocale(locale.LC_ALL, 'id_ID')
+kduser='akuntansiBPKAD'
+
+def proporsiAnggaran(caption):
+    # Header Json
+    headers_json = {
+        'Accept: application/json'
+        'Connection: keep-alive'
+        'Sec-Fetch-Mode: cors'
+        'Sec-Fetch-Site: same-origin'
+    }
+    print(Fore.BLUE + '~ mulai coba ambil data Anggaran' + Style.RESET_ALL)
+    # Mengirim GET request ke halaman setelah login
+    response = session.get(urlserver + '/dashboard/get-data-anggaran', stream=True)
+    loadingPage('Fetching Data Anggaran ')
+    # Parsing data JSON
+    data_json = json.loads(response.text)
+    try:    
+        # Menampilkan data yang diinginkan
+        r_anggaran = data_json['data']
+        # Membaca data JSON sebagai DataFrame menggunakan Pandas
+        df = pd.DataFrame(r_anggaran)
+        # Mengonversi kolom 'Harga' dari string ke float
+        df['total_anggaran'] = df['total_anggaran'].astype('Float64')
+        df['total_realisasi'] = df['total_realisasi'].astype('Float64')
+        # Menghitung proporsi realisasi anggaran
+        df['proporsi'] = df['total_realisasi'] / df['total_anggaran']
+        #.apply(lambda x: locale.currency(x, grouping=True))
+        # Mengatur opsi tampilan angka desimal
+        pd.options.display.float_format = locale.currency
+        # Mengurutkan data berdasarkan proporsi secara menurun
+        df_sorted = df.sort_values(by='proporsi', ascending=True)
+        subset_df = df_sorted[['nmskpd', 'total_anggaran', 'persen_realisasi', 'persen_sisa']]
+        print(Fore.LIGHTGREEN_EX + '')
+        print(caption)
+        # Menampilkan DataFrame ke output CLI
+        print(subset_df)
+        print('' + Style.RESET_ALL)
+
+    except NameError:
+        print(Fore.LIGHTYELLOW_EX + "Variabel x tidak didefinisikan" + Style.RESET_ALL)
+    except ValueError:
+        print(Fore.LIGHTYELLOW_EX + "Anda harus memasukkan angka" + Style.RESET_ALL)
+    except requests.exceptions.RequestException as e:
+        print(Fore.RED + 'Terjadi kesalahan pada permintaan:' + Style.RESET_ALL, str(e))
+    except Exception as e:
+        print(Fore.RED + '! Terjadi kesalahan lain >> logout/n' + Style.RESET_ALL, str(e))
+    finally:
+        print(Fore.LIGHTMAGENTA_EX + 'Selesai...' + Style.RESET_ALL)
 
 # ~~~~~~~~~~~~~~~~~~~~ fungsi MENU UTAMA ~~~~~~~~~~~~~~~~~~~~
 def main_menu():
@@ -135,13 +183,6 @@ else:
     headers_login = {
         'Content-Type': 'application/x-www-form-urlencoded'
     }
-    # Header Json
-    headers_json = {
-        'Accept: application/json'
-        'Connection: keep-alive'
-        'Sec-Fetch-Mode: cors'
-        'Sec-Fetch-Site: same-origin'
-    }
     print(Fore.BLUE + '~ mulai coba login' + Style.RESET_ALL)
     # Mengirim POST request untuk login
     response = session.post(login_url, data=payload_login, headers=headers_login, stream=True)
@@ -160,43 +201,4 @@ print(Fore.BLUE + '** Selamat Datang ' + kduser + ' **\n'  + Style.RESET_ALL)
 main_menu()
 
 
-def proporsiAnggaran(caption):
-    print(Fore.BLUE + '~ mulai coba ambil data Anggaran' + Style.RESET_ALL)
-    # Mengirim GET request ke halaman setelah login
-    response = session.get(urlserver + '/dashboard/get-data-anggaran', headers=headers_json, stream=True)
-    loadingPage('Fetching Data Anggaran ')
-    # Parsing data JSON
-    data_json = json.loads(response.text)
-    try:    
-        # Menampilkan data yang diinginkan
-        r_anggaran = data_json['data']
-        # Membaca data JSON sebagai DataFrame menggunakan Pandas
-        df = pd.DataFrame(r_anggaran)
-        # Mengonversi kolom 'Harga' dari string ke float
-        df['total_anggaran'] = df['total_anggaran'].astype('Float64')
-        df['total_realisasi'] = df['total_realisasi'].astype('Float64')
-        # Menghitung proporsi realisasi anggaran
-        df['proporsi'] = df['total_realisasi'] / df['total_anggaran']
-        #.apply(lambda x: locale.currency(x, grouping=True))
-        # Mengatur opsi tampilan angka desimal
-        pd.options.display.float_format = locale.currency
-        # Mengurutkan data berdasarkan proporsi secara menurun
-        df_sorted = df.sort_values(by='proporsi', ascending=True)
-        subset_df = df_sorted[['nmskpd', 'total_anggaran', 'persen_realisasi', 'persen_sisa']]
-        print(Fore.LIGHTGREEN_EX + '')
-        print('caption')
-        # Menampilkan DataFrame ke output CLI
-        print(subset_df)
-        print('' + Style.RESET_ALL)
-
-    except NameError:
-        print(Fore.LIGHTYELLOW_EX + "Variabel x tidak didefinisikan" + Style.RESET_ALL)
-    except ValueError:
-        print(Fore.LIGHTYELLOW_EX + "Anda harus memasukkan angka" + Style.RESET_ALL)
-    except requests.exceptions.RequestException as e:
-        print(Fore.RED + 'Terjadi kesalahan pada permintaan:' + Style.RESET_ALL, str(e))
-    except Exception as e:
-        print(Fore.RED + '! Terjadi kesalahan lain >> logout/n' + Style.RESET_ALL, str(e))
-    finally:
-        print(Fore.LIGHTMAGENTA_EX + 'Selesai...' + Style.RESET_ALL)
     #logout()
