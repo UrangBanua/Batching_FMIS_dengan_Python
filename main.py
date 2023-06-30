@@ -12,6 +12,41 @@ from colorama import Fore, Style
 # Set lokalisasi atau regional ke Indonesia
 locale.setlocale(locale.LC_ALL, 'id_ID')
 
+# ~~~~~~~~~~~~~~~~~~~~ fungsi MENU UTAMA ~~~~~~~~~~~~~~~~~~~~
+def main_menu():
+    print("=== Menu Utama ===")
+    print("1. Tampilkan pesan selamat datang")
+    print("2. Hitung luas persegi")
+    print("3. Keluar")
+
+    choice = input("Masukkan pilihan Anda: ")
+
+    if choice == "1":
+        print("menu 1")
+    elif choice == "2":
+        print("menu 1")
+    elif choice == "3":
+        print("Terima kasih telah menggunakan program ini. Sampai jumpa!")
+        return
+    else:
+        print("Pilihan tidak valid. Silakan masukkan pilihan yang benar.")
+
+    return_to_menu()
+
+# ~~~~~~~~~~~~~~~~~~~~ Fungsi kembali ke menu awal ~~~~~~~~~~~~~~~~~~~~ 
+def return_to_menu():
+    print("\n")
+    choice = input("Ketik 'menu' untuk kembali ke menu utama atau 'keluar' untuk keluar: ")
+    
+    if choice.lower() == "menu":
+        main_menu()
+    elif choice.lower() == "keluar":
+        print("Terima kasih telah menggunakan program ini. Sampai jumpa!")
+        exit()
+    else:
+        print("Pilihan tidak valid. Silakan masukkan pilihan yang benar.")
+        return_to_menu()
+
 # ~~~~~~~~~~~~~~~~~~~~ Fungsi untuk menyimpan session cookies ke file ~~~~~~~~~~~~~~~~~~~~
 def save_cookies(session, filename):
     with open(filename, 'wb') as f:
