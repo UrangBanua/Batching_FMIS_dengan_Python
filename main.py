@@ -67,7 +67,7 @@ token = soup.find('input', {'name': '_token'})['value']
 print(Fore.GREEN + '~ token didapatkan:', token + ' \n' + Style.RESET_ALL)
 
 # Pengecekan apakah sudah langsung terpindah ke halaman dashboard
-print(Fore.BLUE + '~ cek session apakah expired/tidak' + Style.RESET_ALL)
+print(Fore.BLUE + '~ cek session apakah expired/tidakn/' + Style.RESET_ALL)
 if response.status_code == 200 and '/dashboard' in response.url:
     print(Fore.GREEN + 'Halaman langsung terpindah ke Dashboard' + Style.RESET_ALL)
     # tambah code selanjutnya
@@ -82,7 +82,7 @@ else:
         print(Fore.RED + '! Password tidak boleh kosong' + Style.RESET_ALL)
         password = getpass.getpass('Password  : ')
     print('')
-    
+
     # URL halaman login
     login_url = urlserver + '/login'
     # Data login (sesuaikan dengan field input pada halaman login)
