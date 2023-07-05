@@ -21,7 +21,7 @@ def proporsiAnggaran(caption):
         'Sec-Fetch-Mode: cors'
         'Sec-Fetch-Site: same-origin'
     }
-    print(Fore.BLUE + '~ mulai coba ambil data Anggaran' + Style.RESET_ALL)
+    print(Fore.BLUE + '\n~ mulai coba ambil data Anggaran' + Style.RESET_ALL)
     # Mengirim GET request ke halaman setelah login
     response = session.get(urlserver + '/dashboard/get-data-anggaran', stream=True)
     loadingPage('Fetching Data Anggaran ')
@@ -62,7 +62,7 @@ def proporsiAnggaran(caption):
 
 # ~~~~~~~~~~~~~~~~~~~~ fungsi MENU UTAMA ~~~~~~~~~~~~~~~~~~~~
 def main_menu():
-    print("~~~~~~~~~~~~~~~~~~~~ Menu Utama ~~~~~~~~~~~~~~~~~~~~")
+    print("\n~~~~~~~~~~~~~~~~~~~~ Menu Utama ~~~~~~~~~~~~~~~~~~~~")
     print("1. Proporsi Anggaran vs Realisasi")
     print("2. BUD - Review")
     print("3. Tatausaha - Validasi")
@@ -157,7 +157,7 @@ token = soup.find('input', {'name': '_token'})['value']
 print(Fore.GREEN + '~ token didapatkan:', token + ' \n' + Style.RESET_ALL)
 
 # Pengecekan apakah sudah langsung terpindah ke halaman dashboard
-print(Fore.BLUE + '~ cek session apakah expired/tidakn/' + Style.RESET_ALL)
+print(Fore.BLUE + '~ cek session apakah expired/tidak\n' + Style.RESET_ALL)
 if response.status_code == 200 and '/dashboard' in response.url:
     print(Fore.GREEN + 'Halaman langsung terpindah ke Dashboard' + Style.RESET_ALL)
     # tambah code selanjutnya
@@ -197,7 +197,7 @@ else:
         print('! Pesan Kesalahan:', response.text)
 
 # Menampilkan User dan Menu Utama
-print(Fore.BLUE + '** Selamat Datang ' + kduser + ' **\n'  + Style.RESET_ALL)
+print(Fore.BLUE + '** Selamat Datang ' + kduser + ' **'  + Style.RESET_ALL)
 main_menu()
 
 
