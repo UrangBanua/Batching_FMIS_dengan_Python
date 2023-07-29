@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 from colorama import Fore, Style
 
 # Set lokalisasi atau regional ke Indonesia
-locale.setlocale(locale.LC_ALL, 'id_ID')
+locale.setlocale(locale.LC_ALL, 'id_ID.UTF-8')
 kduser='akuntansiBPKAD'
 
 def proporsiAnggaran(caption):
