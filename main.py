@@ -128,7 +128,7 @@ def loadingPage(caption):
         content_length = len(response.content)
 
     # Inisialisasi tqdm dengan total berdasarkan panjang konten
-    with tqdm(total=float(content_length), desc=caption, unit='B', unit_scale=True, ncols=70, bar_format='{desc}: |{bar}| {percentage:3.0f}%') as pbar:
+    with tqdm(total=content_length, desc=caption, unit='B', unit_scale=True, ncols=70, bar_format='{desc}: |{bar}| {percentage:3.0f}%') as pbar:
         # Membaca dan menunggu respon
         for chunk in response.iter_content(1024):
             # Menggunakan fungsi sleep untuk simulasi waiting response
@@ -153,7 +153,7 @@ response = session.get(urlserver)
 # Parsing halaman dengan BeautifulSoup
 soup = BeautifulSoup(response.content, 'html.parser')
 # Mendapatkan token dari halaman sebelum login
-token = soup.find('input', {'name': '_token'}).get('value')
+token = soup.find('input', {'name': '_token'})['value']
 print(Fore.GREEN + '~ token didapatkan:', token + ' \n' + Style.RESET_ALL)
 
 # Pengecekan apakah sudah langsung terpindah ke halaman dashboard
